@@ -40,7 +40,7 @@ void MX_UART4_Init(void)
   huart4.Init.Mode = UART_MODE_TX_RX;
   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_HalfDuplex_Init(&huart4) != HAL_OK)
+  if (HAL_UART_Init(&huart4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -58,7 +58,7 @@ void MX_UART5_Init(void)
   huart5.Init.Mode = UART_MODE_TX_RX;
   huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart5.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_HalfDuplex_Init(&huart5) != HAL_OK)
+  if (HAL_UART_Init(&huart5) != HAL_OK)
   {
     Error_Handler();
   }
@@ -98,10 +98,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**UART4 GPIO Configuration    
-    PA0-WKUP     ------> UART4_TX 
+    PA0-WKUP     ------> UART4_TX
+    PA1     ------> UART4_RX 
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
@@ -124,10 +125,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   
     __HAL_RCC_GPIOE_CLK_ENABLE();
     /**UART5 GPIO Configuration    
+    PE7     ------> UART5_RX
     PE8     ------> UART5_TX 
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_8;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_UART5;
@@ -178,9 +180,10 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     __HAL_RCC_UART4_CLK_DISABLE();
   
     /**UART4 GPIO Configuration    
-    PA0-WKUP     ------> UART4_TX 
+    PA0-WKUP     ------> UART4_TX
+    PA1     ------> UART4_RX 
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1);
 
     /* UART4 interrupt Deinit */
     HAL_NVIC_DisableIRQ(UART4_IRQn);
@@ -197,9 +200,10 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     __HAL_RCC_UART5_CLK_DISABLE();
   
     /**UART5 GPIO Configuration    
+    PE7     ------> UART5_RX
     PE8     ------> UART5_TX 
     */
-    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_8);
+    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_7|GPIO_PIN_8);
 
     /* UART5 interrupt Deinit */
     HAL_NVIC_DisableIRQ(UART5_IRQn);
