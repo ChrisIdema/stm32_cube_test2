@@ -20,19 +20,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-//#include "cmsis_os.h"
+#include "cmsis_os.h"
 #include "rtc.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
-
-#include "FreeRTOS.h"
-#include "task.h"
-#include "timers.h"
-#include "queue.h"
-#include "semphr.h"
-#include "event_groups.h"
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -71,7 +63,6 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE END 0 */
 
-
 /**
   * @brief  The application entry point.
   * @retval int
@@ -109,13 +100,11 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  /* Call init function for freertos objects (in freertos.c) */
-  //osKernelInitialize();  
+  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init(); 
   /* Start scheduler */
-  //osKernelStart();
-  vTaskStartScheduler();
-
+  osKernelStart();
+ 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

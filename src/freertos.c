@@ -19,19 +19,10 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-// #include "FreeRTOS.h"
-// #include "task.h"
-// #include "main.h"
-// #include "cmsis_os.h"
-
 #include "FreeRTOS.h"
 #include "task.h"
-#include "timers.h"
-#include "queue.h"
-#include "semphr.h"
-#include "event_groups.h"
-
 #include "main.h"
+#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
@@ -58,12 +49,12 @@
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
-// osThreadId defaultTaskHandle;
-// const osThreadAttr_t defaultTask_attributes = {
-//   .name = "defaultTask",
-//   .priority = (osPriority) osPriorityNormal,
-//   .stack_size = 128 * 4
-// };
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -103,24 +94,13 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-
-  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-
-  xTaskCreate( StartDefaultTask,
-            "StartDefaultTask",
-            1024/4,
-            NULL,
-            tskIDLE_PRIORITY+1,
-            NULL );
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
 }
-
-#include "usart.h"
-#include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN Header_StartDefaultTask */
 /**
